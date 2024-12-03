@@ -4,6 +4,8 @@ import { TodoModule } from './todo/todo.module';
 import { AuthModule } from './auth/auth.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { Todo } from './todo/todo.entity';
+import { User } from './auth/user.entity';
 
 @Module({
   imports: [
