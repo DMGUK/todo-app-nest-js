@@ -14,10 +14,10 @@ import { User } from './auth/user.entity';
       host: 'localhost',
       port: 3306,
       username: 'root',
-      password: 'password',
+      password: 'root_mysql123@@@345',
       database: 'todo_app',
       entities: [User, Todo],
-      synchronize: true, // Don't use this in production
+      synchronize: true, 
     }),
     TodoModule,
     AuthModule,
