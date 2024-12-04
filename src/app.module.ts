@@ -4,15 +4,14 @@ import { TodoModule } from './todo/todo.module';
 import { AuthModule } from './auth/auth.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { Todo } from './todo/todo.entity';
 import { User } from './auth/user.entity';
 
 @Module({
   imports: [
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', '..', 'templates'), // Path to your HTML templates folder
+      rootPath: join(__dirname, '..', 'templates'), // Adjust this path to match your templates folder
+      serveRoot: '/', // Serve the templates at the root of the application
     }),
     TypeOrmModule.forRoot({
       type: 'mysql',
@@ -23,6 +22,7 @@ import { User } from './auth/user.entity';
       database: 'todo_app',
       entities: [User, Todo],
       synchronize: true, 
+      logging: ['query', 'error'],
     }),
     TodoModule,
     AuthModule,

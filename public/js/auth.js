@@ -8,15 +8,17 @@ document.addEventListener('DOMContentLoaded', () => {
       e.preventDefault();
 
       // Extract form data
-      const formData = new FormData(loginForm);
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
       const data = {
-        username: formData.get('username'),
-        password: formData.get('password'),
+        username: username,
+        password: password,
       };
 
       try {
         // Send JSON data
-        const response = await fetch('http://localhost:3000/auth/login', {
+        const response = await fetch('http://localhost:3000/login', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -30,9 +32,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const result = await response.json();
-        localStorage.setItem('token', result.token); // Save the token to localStorage
         alert('Login successful!');
-        window.location.href = 'todos.html'; // Redirect to the Todo page
+        // Redirect to the Todo page or perform another action
+        window.location.href = '/todo';
       } catch (error) {
         document.getElementById('error').innerText = error.message;
       }
@@ -45,33 +47,38 @@ document.addEventListener('DOMContentLoaded', () => {
       e.preventDefault();
 
       // Extract form data
-      const formData = new FormData(signupForm);
+      const username = document.getElementById('username').value;
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
       const data = {
-        username: formData.get('username'),
-        email: formData.get('email'),
-        password: formData.get('password'),
+        username: username,
+        email: email,
+        password: password,
       };
 
       try {
-        // Send JSON data
-        const response = await fetch('http://localhost:3000/auth/signup', {
+        const response = await fetch('http://localhost:3000/login', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify(data),
         });
-
-        if (!response.ok) {
+      
+        if (response.ok) {
+          const result = await response.json();
+          alert('Login successful!');
+          window.location.href = '/todo'; // Redirect on success
+        } else {
           const errorData = await response.json();
-          throw new Error(errorData.error || 'Signup failed');
+          throw new Error(errorData.error || 'Login failed');
         }
-
-        alert('Signup successful! Please login.');
-        window.location.href = 'login.html'; // Redirect to the Login page
+        
       } catch (error) {
         document.getElementById('error').innerText = error.message;
       }
+      
     });
   }
 });

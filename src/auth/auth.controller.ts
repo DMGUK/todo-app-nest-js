@@ -1,17 +1,23 @@
-import { Controller, Get, Post, Body, Res } from '@nestjs/common';
+import { Controller, Get, Post, Body, Res, Render } from '@nestjs/common';
 import { Response } from 'express';
-import { AuthService } from './auth.service';
-import { join } from 'path';
+import { AuthService } from './auth.service'; // Adjust path as per your project structure
 
-
-@Controller('auth')
+@Controller('/')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  // Root endpoint: Render the home page
+  @Get()
+  @Render('index') // Render the Handlebars template named "index.hbs"
+  serveHome() {
+    return {}; // Pass any data to the template if necessary
+  }
+
   // Display the signup form
   @Get('/signup')
-  showSignupForm(@Res() res: Response) {
-    res.sendFile(join(__dirname, '../templates/signup.html')); // Serve the signup template
+  @Render('signup') // Render the Handlebars template named "signup.hbs"
+  showSignupForm() {
+    return {};
   }
 
   // Handle signup form submission
@@ -24,30 +30,39 @@ export class AuthController {
   ) {
     try {
       await this.authService.signUp(username, password, email);
-      return res.redirect('/login'); // Redirect to login page on success
+      return res.redirect('/login'); // Redirect to the login page on success
     } catch (error) {
+      console.error('Signup failed:', error);
       return res.redirect('/signup?error=signup_failed'); // Redirect back with an error
     }
   }
 
   // Display the login form
   @Get('/login')
-  showLoginForm(@Res() res: Response) {
-    res.sendFile(join(__dirname, '../templates/login.html')); // Serve the login template
+  @Render('login') // Render the Handlebars template named "login.hbs"
+  showLoginForm() {
+    return {};
   }
 
+  // Handle login form submission
   @Post('/login')
   async login(
     @Body('username') username: string,
     @Body('password') password: string,
     @Res() res: Response,
   ) {
-    const token = await this.authService.validateUser(username, password);
-    if (token) {
-      res.cookie('token', token, { httpOnly: true });
-      return res.redirect('/todos'); // Redirect to the todos page on successful login
-    } else {
-      return res.redirect('/login?error=invalid_credentials'); // Redirect back with an error
+    try {
+      const token = await this.authService.validateUser(username, password);
+      if (token) {
+        res.cookie('token', token, { httpOnly: true });
+        return res.status(200).json({ success: true, token }); // Return JSON instead of redirecting
+      } else {
+        return res.status(401).json({ success: false, error: 'Invalid credentials' });
+      }
+    } catch (error) {
+      console.error('Login failed:', error);
+      return res.status(500).json({ success: false, error: 'Internal server error' });
     }
   }
+  
 }

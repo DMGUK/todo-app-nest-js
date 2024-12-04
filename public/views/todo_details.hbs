@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Todo Details</title>
+</head>
+<body>
+  <h1>Todo Details</h1>
+  <p><strong>Title:</strong> {{todo.title}}</p>
+  <p><strong>Description:</strong> {{todo.description}}</p>
+  <p><strong>Status:</strong> {{#if todo.isFinished}}Finished{{else}}Not Finished{{/if}}</p>
+
+  <div class="mt-4">
+    <a href="/todo/{{todo.id}}/status" class="btn btn-primary">
+      {{#if todo.isFinished}}Mark as Not Finished{{else}}Mark as Finished{{/if}}
+    </a>
+    <a href="/todo/{{todo.id}}/delete" class="btn btn-danger">Delete Todo</a>
+  </div>
+
+
+  <a href="/todo">Back to Todos</a>
+</body>
+</html>
