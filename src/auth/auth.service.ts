@@ -46,4 +46,9 @@ export class AuthService {
 
     return user;
   }
+
+  logout(): void {
+    // Placeholder for any additional server-side logout logic, if required.
+    console.log('User logged out');
+  }
 }

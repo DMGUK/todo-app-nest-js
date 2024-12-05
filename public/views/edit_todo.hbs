@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Todo</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="container mt-5">
+    <h1 class="text-success">Edit Todo</h1>
+    <form action="/todo/{{todo.id}}/edit" method="POST" class="mt-4">
+      <div class="mb-3">
+        <label for="title" class="form-label">Title</label>
+        <input type="text" id="title" name="title" value="{{todo.title}}" class="form-control" required>
+      </div>
+      <div class="mb-3">
+        <label for="description" class="form-label">Description</label>
+        <textarea id="description" name="description" class="form-control" rows="5" required>{{todo.description}}</textarea>
+      </div>
+      <button type="submit" class="btn custom-file-upload">Update Todo</button>
+    </form>
+    <a href="/todo" class="btn nav-link mt-3">Back to Todos</a>
+  </div>
+</body>
+</html>

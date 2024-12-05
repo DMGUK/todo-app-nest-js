@@ -104,12 +104,26 @@ export class TodoController {
     return { todo };
   }
 
-  @Patch(':id/edit') // tomorrow
+  @Get('/:id/edit')
+  @Render('edit_todo') // Render the `edit_todo` view
+  async showEditTodoForm(@Param('id') id: number, @Req() req: Request) {
+    const authCookie = req.cookies?.token;
+    if (!authCookie) {
+      throw new UnauthorizedException('User not logged in');
+    }
+
+    const user = parseUserCookie(authCookie);
+    const todo = await this.todoService.getTodoById(id, user.id);
+    return { todo };
+  }
+
+  @Post(':id/edit') // tomorrow
   async editTodo(
     @Param('id') id: number,
     @Body('title') title: string,
     @Body('description') description: string,
     @Req() req: Request,
+    @Res() res: Response,
   ) {
     const authCookie = req.cookies?.token;
     if (!authCookie) {
@@ -117,7 +131,8 @@ export class TodoController {
     }
 
     const user = parseUserCookie(authCookie);
-    return this.todoService.editTodo(id, title, description, user.id);
+    await this.todoService.editTodo(id, title, description, user.id);
+    return res.redirect('/todo');
   }
 
   @Get('/:id/status')

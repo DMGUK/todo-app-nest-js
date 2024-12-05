@@ -55,14 +55,19 @@ export class AuthController {
       const token = await this.authService.validateUser(username, password);
       if (token) {
         res.cookie('token', token, { httpOnly: true });
-        return res.status(200).json({ success: true, token }); // Return JSON instead of redirecting
+        return res.redirect('/todo'); // Redirect to the todos page on successful login
       } else {
-        return res.status(401).json({ success: false, error: 'Invalid credentials' });
+        return res.redirect('/login?error=invalid_credentials'); // Redirect back to login with an error
       }
     } catch (error) {
       console.error('Login failed:', error);
-      return res.status(500).json({ success: false, error: 'Internal server error' });
+      return res.redirect('/login?error=login_failed'); // Redirect back to login with a general error
     }
   }
-  
+
+  @Get('/logout')
+  logout(@Res() res: Response) {
+    res.clearCookie('token'); // Clear the authentication cookie
+    return res.redirect('/login'); // Redirect to the login page after logout
+  }
 }

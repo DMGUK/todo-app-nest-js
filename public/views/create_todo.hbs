@@ -1,18 +1,26 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Todo</title>
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-  <h1>Create todo</h1>
-  <form action="/todo/create_todo" method="POST">
-    <label for="title">Enter the task's title:</label>
-    <input type="text" id="title" name="title" required>
-    <br>
-    <label for="description">Enter the task's description:</label>
-    <textarea id="description" name="description" required></textarea>
-    <br>
-    <button type="submit">Add new task</button>
-  </form>
+  <div class="container mt-5">
+    <h1 class="text-success">Create a New Todo</h1>
+    <form action="/todo/create_todo" method="POST" class="mt-4">
+      <div class="mb-3">
+        <label for="title" class="form-label">Title</label>
+        <input type="text" id="title" name="title" class="form-control" required>
+      </div>
+      <div class="mb-3">
+        <label for="description" class="form-label">Description</label>
+        <textarea id="description" name="description" class="form-control" rows="5" required></textarea>
+      </div>
+      <button type="submit" class="btn custom-file-upload">Create Todo</button>
+    </form>
+    <a href="/todo" class="btn nav-link mt-3">Back to Todos</a>
+  </div>
 </body>
 </html>
