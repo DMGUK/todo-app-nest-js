@@ -9,18 +9,38 @@
 <body>
   <div class="container mt-5">
     <h1 class="text-success">Login</h1>
+
+    {{#if error}}
+      <div class="flash-error">
+        Failed login: Incorrect username or password<br><br>
+      </div>
+    {{/if}}
+
     <form action="/login" method="POST" class="mt-4">
-      <div class="mb-3">
-        <label for="username" class="form-label">Username</label>
-        <input type="text" id="username" name="username" class="form-control" required>
-      </div>
-      <div class="mb-3">
-        <label for="password" class="form-label">Password</label>
-        <input type="password" id="password" name="password" class="form-control" required>
-      </div>
-      <button type="submit" class="btn custom-file-upload">Login</button>
+      <input 
+        type="text" 
+        id="username" 
+        name="username" 
+        class="form-control bg-dark text-success border-0" 
+        placeholder="Enter the username" 
+        required 
+        style="font-size: 22px; font-family: 'JetBrains Mono', monospace;">
+      <br><br>      
+      <input 
+        type="password" 
+        id="password" 
+        name="password" 
+        class="form-control bg-dark text-success border-0" 
+        placeholder="Enter the password" 
+        required 
+        style="font-size: 22px; font-family: 'JetBrains Mono', monospace;">
+      <br><br>
+      <button type="submit" class="btn custom-file-upload" style="font-size: 22px; font-family: 'JetBrains Mono', monospace;">Login</button>
     </form>
-    <a href="/signup" class="btn nav-link mt-3">Signup</a>
+    <br>
+    <a href="/signup" class="btn nav-link mt-3 underline">Not logged in ? Signup</a>
+    <br><br>
+    <a href="/" class="btn nav-link mt-3 underline">Back to main page</a>
   </div>
 </body>
 </html>

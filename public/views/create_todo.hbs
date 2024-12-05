@@ -1,26 +1,31 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Create Todo</title>
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
   <div class="container mt-5">
-    <h1 class="text-success">Create a New Todo</h1>
+    <h1 class="text-success">Edit todo</h1>
     <form action="/todo/create_todo" method="POST" class="mt-4">
-      <div class="mb-3">
-        <label for="title" class="form-label">Title</label>
-        <input type="text" id="title" name="title" class="form-control" required>
-      </div>
-      <div class="mb-3">
-        <label for="description" class="form-label">Description</label>
-        <textarea id="description" name="description" class="form-control" rows="5" required></textarea>
-      </div>
-      <button type="submit" class="btn custom-file-upload">Create Todo</button>
-    </form>
-    <a href="/todo" class="btn nav-link mt-3">Back to Todos</a>
+      <input 
+        type="text" 
+        id="title" 
+        name="title" 
+        class="form-control bg-dark text-success border-0" 
+        placeholder="Enter the task's new description" 
+        required 
+        style="font-size: 22px; font-family: 'JetBrains Mono', monospace;">
+      <br><br>      
+      <input 
+        type="text" 
+        id="description" 
+        name="description" 
+        class="form-control bg-dark text-success border-0" 
+        placeholder="Enter the task's new description" 
+        required 
+        style="font-size: 22px; font-family: 'JetBrains Mono', monospace;">
+      <br><br>
+      <button type="submit" class="btn custom-file-upload" style="font-size: 22px; font-family: 'JetBrains Mono', monospace;">Add the task</button>
   </div>
 </body>
 </html>

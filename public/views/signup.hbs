@@ -10,21 +10,39 @@
   <div class="container mt-5">
     <h1 class="text-success">Signup</h1>
     <form action="/signup" method="POST" class="mt-4">
-      <div class="mb-3">
-        <label for="username" class="form-label">Username</label>
-        <input type="text" id="username" name="username" class="form-control" required>
-      </div>
-      <div class="mb-3">
-        <label for="email" class="form-label">Email</label>
-        <input type="email" id="email" name="email" class="form-control" required>
-      </div>
-      <div class="mb-3">
-        <label for="password" class="form-label">Password</label>
-        <input type="password" id="password" name="password" class="form-control" required>
-      </div>
-      <button type="submit" class="btn custom-file-upload">Signup</button>
+      <input 
+        type="text" 
+        id="username" 
+        name="username" 
+        class="form-control bg-dark text-success border-0" 
+        placeholder="Enter the username" 
+        required 
+        style="font-size: 22px; font-family: 'JetBrains Mono', monospace;">
+      <br><br>      
+      <input 
+        type="text" 
+        id="email" 
+        name="email" 
+        class="form-control bg-dark text-success border-0" 
+        placeholder="Enter the username" 
+        required 
+        style="font-size: 22px; font-family: 'JetBrains Mono', monospace;">
+      <br><br>      
+      <input 
+        type="password" 
+        id="password" 
+        name="password" 
+        class="form-control bg-dark text-success border-0" 
+        placeholder="Enter the password" 
+        required 
+        style="font-size: 22px; font-family: 'JetBrains Mono', monospace;">
+      <br><br>
+      <button type="submit" class="btn custom-file-upload" style="font-size: 22px; font-family: 'JetBrains Mono', monospace;">Sign Up</button>
     </form>
-    <a href="/login" class="btn nav-link mt-3">Login</a>
+    <br>
+    <a href="/login" class="btn nav-link mt-3 underline">Already singed up ? Login</a>    
+    <br><br>
+    <a href="/" class="btn nav-link mt-3 underline">Back to main page</a>
   </div>
 </body>
 </html>

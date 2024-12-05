@@ -13,6 +13,17 @@ export class TodoService {
     private readonly userRepository: Repository<User>,
   ) {}
 
+  async getPaginatedTodos(userId: number, page: number, limit: number) {
+    const [todos, count] = await this.todoRepository.findAndCount({
+      where: { user: { id: userId } },
+      take: limit,
+      skip: (page - 1) * limit,
+    });
+
+    const totalPages = Math.ceil(count / limit);
+    return { todos, totalPages };
+  }
+
   async getTodos(userId: number): Promise<Todo[]> {
     return this.todoRepository.find({
       where: { user: { id: userId } },

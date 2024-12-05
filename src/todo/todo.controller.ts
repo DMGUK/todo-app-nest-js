@@ -1,16 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Patch,
-  Delete,
-  Body,
-  Param,
-  Render,
-  Req,
-  Res,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Render, Req, Res, UnauthorizedException, Query } from '@nestjs/common';
 import { TodoService } from './todo.service';
 import { CreateTodoDto } from './dto/create-todo.dto';
 import { Request, Response } from 'express';
@@ -29,17 +17,17 @@ function parseUserCookie(cookie: string | object): any {
   }
 
   try {
-    const decodedCookie = decodeURIComponent(cookie); // Decode URL-encoded cookie
+    const decodedCookie = decodeURIComponent(cookie); 
     console.log('Decoded Cookie:', decodedCookie);
 
     if (decodedCookie.startsWith('j:')) {
-      const jsonString = decodedCookie.slice(2); // Remove "j:" prefix
+      const jsonString = decodedCookie.slice(2); 
       console.log('JSON String:', jsonString);
-      return JSON.parse(jsonString); // Parse the JSON string
+      return JSON.parse(jsonString); 
     }
 
     console.log('Cookie is not prefixed with "j:", attempting to parse directly');
-    return JSON.parse(decodedCookie); // Parse directly if no prefix
+    return JSON.parse(decodedCookie);
   } catch (error) {
     console.error('Error parsing cookie:', error.message);
     throw new Error('Invalid cookie format');
@@ -52,27 +40,32 @@ export class TodoController {
 
   @Get()
   @Render('todos')
-  async getTodos(@Req() req: Request) {
+  async getTodos(@Query('page') page = 1, @Req() req: Request) {
     const authCookie = req.cookies?.token;
     if (!authCookie) {
       throw new UnauthorizedException('User not logged in');
     }
-
     const user = parseUserCookie(authCookie);
-    const todos = await this.todoService.getTodos(user.id); // Pass only user ID
-    return { todos };
+
+    const { todos, totalPages } = await this.todoService.getPaginatedTodos(
+      user.id,
+      +page,
+      5, 
+    );
+
+    return { todos, currentPage: +page, totalPages };
   }
 
   @Get('/create_todo')
-  @Render('create_todo') // Render the `create_todo` view
+  @Render('create_todo') 
   async showCreateTodoForm(@Req() req: Request) {
     const authCookie = req.cookies?.token;
     if (!authCookie) {
       throw new UnauthorizedException('User not logged in');
     }
 
-    parseUserCookie(authCookie); // Ensure the user is logged in
-    return {}; // Return any additional data if needed for the template
+    parseUserCookie(authCookie); 
+    return {}; 
   }
 
   @Post('/create_todo')
@@ -91,21 +84,8 @@ export class TodoController {
     return res.redirect('/todo');
   }
 
-  @Get('/:id') // Dynamic routes should come after more specific routes
-  @Render('todo_details')
-  async getTodoById(@Param('id') id: number, @Req() req: Request) {
-    const authCookie = req.cookies?.token;
-    if (!authCookie) {
-      throw new UnauthorizedException('User not logged in');
-    }
-
-    const user = parseUserCookie(authCookie);
-    const todo = await this.todoService.getTodoById(id, user.id);
-    return { todo };
-  }
-
   @Get('/:id/edit')
-  @Render('edit_todo') // Render the `edit_todo` view
+  @Render('edit_todo') 
   async showEditTodoForm(@Param('id') id: number, @Req() req: Request) {
     const authCookie = req.cookies?.token;
     if (!authCookie) {
@@ -117,7 +97,7 @@ export class TodoController {
     return { todo };
   }
 
-  @Post(':id/edit') // tomorrow
+  @Post(':id/edit') 
   async editTodo(
     @Param('id') id: number,
     @Body('title') title: string,
@@ -148,12 +128,11 @@ export class TodoController {
 
     const user = parseUserCookie(authCookie);
 
-    // Toggle the status of the todo
     const todo = await this.todoService.getTodoById(id, user.id);
     const newStatus = !todo.isFinished;
     await this.todoService.updateTodoStatus(id, newStatus, user.id);
 
-    return res.redirect('/todo'); // Redirect back to the todo list
+    return res.redirect('/todo'); 
   }
 
   @Get('/:id/delete')
@@ -170,6 +149,6 @@ export class TodoController {
     const user = parseUserCookie(authCookie);
     await this.todoService.deleteTodo(id, user.id);
 
-    return res.redirect('/todo'); // Redirect back to the todo list
+    return res.redirect('/todo'); 
   }
 }

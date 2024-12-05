@@ -10,8 +10,8 @@ import { User } from './auth/user.entity';
 @Module({
   imports: [
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'templates'), // Adjust this path to match your templates folder
-      serveRoot: '/', // Serve the templates at the root of the application
+      rootPath: join(__dirname, '..', 'templates'), 
+      serveRoot: '/', 
     }),
     TypeOrmModule.forRoot({
       type: 'mysql',

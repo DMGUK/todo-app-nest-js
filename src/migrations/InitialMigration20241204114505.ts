@@ -3,7 +3,6 @@ import { MigrationInterface, QueryRunner, Table, TableForeignKey } from "typeorm
 
 export class InitialMigration20241204114505 implements MigrationInterface {
     public async up(queryRunner: QueryRunner): Promise<void> {
-        // Create User Table
         await queryRunner.createTable(
             new Table({
                 name: "user",
@@ -31,7 +30,6 @@ export class InitialMigration20241204114505 implements MigrationInterface {
             true
         );
 
-        // Create Todo Table
         await queryRunner.createTable(
             new Table({
                 name: "todo",
@@ -68,7 +66,6 @@ export class InitialMigration20241204114505 implements MigrationInterface {
             true
         );
 
-        // Add Foreign Key for Todo -> User
         await queryRunner.createForeignKey(
             "todo",
             new TableForeignKey({
@@ -81,12 +78,10 @@ export class InitialMigration20241204114505 implements MigrationInterface {
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
-        // Drop Foreign Key
         const table = await queryRunner.getTable("todo");
         const foreignKey = table.foreignKeys.find(fk => fk.columnNames.indexOf("userId") !== -1);
         await queryRunner.dropForeignKey("todo", foreignKey);
 
-        // Drop Tables
         await queryRunner.dropTable("todo");
         await queryRunner.dropTable("user");
     }
