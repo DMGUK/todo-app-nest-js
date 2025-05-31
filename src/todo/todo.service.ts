@@ -82,12 +82,15 @@ export class TodoService {
   }
 
   async deleteTodo(id: number, userId: number): Promise<void> {
-    const result = await this.todoRepository.delete({
-      id,
-      user: { id: userId },
-    });
+    const result = await this.todoRepository
+      .createQueryBuilder()
+      .delete()
+      .from(Todo)
+      .where('id = :id AND userId = :userId', { id, userId })
+      .execute();
+
     if (result.affected === 0) {
-      throw new NotFoundException(`Todo with ID ${id} not found`);
+      throw new NotFoundException(`Todo with ID ${id} not found or does not belong to the user`);
     }
   }
 }

@@ -10,8 +10,8 @@ import { User } from './auth/user.entity';
 @Module({
   imports: [
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'templates'), 
-      serveRoot: '/', 
+      rootPath: join(__dirname, '..', 'templates'),
+      serveRoot: '/',
     }),
     TypeOrmModule.forRoot({
       type: 'mysql',
@@ -21,7 +21,7 @@ import { User } from './auth/user.entity';
       password: 'root_mysql123@@@345',
       database: 'todo_app',
       entities: [User, Todo],
-      synchronize: true, 
+      synchronize: true,
       logging: ['query', 'error'],
     }),
     TodoModule,

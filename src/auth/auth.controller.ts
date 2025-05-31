@@ -1,22 +1,19 @@
-import { Controller, Get, Post, Body, Res, Render, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Res,
+  Query,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
 import { Response } from 'express';
 import { AuthService } from './auth.service';
 
-@Controller('/')
+@Controller('auth') // changed from '/' to 'auth'
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
-
-  @Get()
-  @Render('index') 
-  serveHome() {
-    return {}; 
-  }
-
-  @Get('/signup')
-  @Render('signup') 
-  showSignupForm(@Query('error') error: string) {
-    return { error };
-  }
 
   @Post('/signup')
   async signup(
@@ -27,18 +24,24 @@ export class AuthController {
   ) {
     try {
       await this.authService.signUp(username, password, email);
-      return res.redirect('/login'); 
+      return res.status(201).json({ message: 'Signup successful' });
     } catch (error) {
       console.error('Signup failed:', error);
-      return res.redirect('/signup?error=signup_failed'); 
+
+      // If the error is an HttpException (like ConflictException), preserve its response
+      if (error.getStatus && error.getResponse) {
+        return res
+          .status(error.getStatus())
+          .json(error.getResponse());
+      }
+
+      // Otherwise fallback to generic bad request
+      return res
+        .status(HttpStatus.BAD_REQUEST)
+        .json({ message: 'Signup failed' });
     }
   }
 
-  @Get('/login')
-  @Render('login') 
-  showLoginForm(@Query('error') error: string) {
-    return { error };
-  }
 
   @Post('/login')
   async login(
@@ -49,20 +52,23 @@ export class AuthController {
     try {
       const token = await this.authService.validateUser(username, password);
       if (token) {
-        res.cookie('token', token, { httpOnly: true });
-        return res.redirect('/todo'); 
+        res.cookie('token', token, {
+          httpOnly: true,
+          sameSite: 'lax',
+        });
+        return res.status(200).json({ message: 'Login successful' });
       } else {
-        return res.redirect('/login?error=invalid_credentials'); 
+        throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
       }
     } catch (error) {
       console.error('Login failed:', error);
-      return res.redirect('/login?error=login_failed'); 
+      throw new HttpException('Login failed', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
-  @Get('/logout')
+  @Post('/logout')
   logout(@Res() res: Response) {
-    res.clearCookie('token'); 
-    return res.redirect('/'); 
+    res.clearCookie('token');
+    return res.status(200).json({ message: 'Logged out' });
   }
 }

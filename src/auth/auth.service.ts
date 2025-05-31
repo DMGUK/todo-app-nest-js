@@ -1,4 +1,8 @@
-import { Injectable, ConflictException, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  ConflictException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
@@ -11,7 +15,11 @@ export class AuthService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  async signUp(username: string, password: string, email: string): Promise<void> {
+  async signUp(
+    username: string,
+    password: string,
+    email: string,
+  ): Promise<void> {
     const existingUser = await this.userRepository.findOne({
       where: [{ username }, { email }],
     });
@@ -22,7 +30,11 @@ export class AuthService {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const user = this.userRepository.create({ username, password: hashedPassword, email });
+    const user = this.userRepository.create({
+      username,
+      password: hashedPassword,
+      email,
+    });
     await this.userRepository.save(user);
   }
 
